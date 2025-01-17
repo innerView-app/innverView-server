@@ -20,8 +20,6 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class KakaoService {
 
-//    private final RestTemplate restTemplate;
-
     @Value("${kakao.client_id}")
     private String clientId;
 
