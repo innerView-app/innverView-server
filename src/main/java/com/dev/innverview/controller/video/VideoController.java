@@ -1,5 +1,6 @@
 package com.dev.innverview.controller.video;
 
+import com.dev.innverview.data.video.TsRequest;
 import com.dev.innverview.data.video.VideoRequest;
 import com.dev.innverview.exception.DoesNotExist;
 import com.dev.innverview.service.video.VideoService;
@@ -36,6 +37,21 @@ public class VideoController {
             headers.set("Content-Type", "application/vnd.apple.mpegurl");
             headers.set("Content-Disposition", "attachment;filename=index.m3u8");
             StreamingResponseBody body = videoService.m3u8Index(UUID.fromString(request.getId()));
+            return new ResponseEntity<>(body, headers, HttpStatus.OK);
+        } catch (DoesNotExist e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(
+            path = "/{id}/{ts:.+}.ts",
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<StreamingResponseBody> ts(@PathVariable("id") String id, @Valid @ParameterObject TsRequest tsRequest) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/vnd.apple.mpegurl");
+            headers.set("Content-Disposition", "attachment;filename=" + tsRequest.getTs() + ".ts");
+            StreamingResponseBody body = videoService.ts(UUID.fromString(id), tsRequest.getTs() + ".ts");
             return new ResponseEntity<>(body, headers, HttpStatus.OK);
         } catch (DoesNotExist e) {
             return ResponseEntity.notFound().build();

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +75,32 @@ public class VideoServiceImpl implements VideoService{
 
     @Override
     public StreamingResponseBody ts(UUID videoId, String ts) throws DoesNotExist {
-        return null;
+        Video video = videoRepository.findById(videoId).orElseThrow();
+        if (video.getStatus().equals(VideoStatus.PROCESSING)) {
+            throw new DoesNotExist("Video is still processing");
+        }
+        System.out.println("ts: " + ts);
+        try {
+            InputStream inputStream = localStorageService.readFile(video.getId().toString(), ts);
+            return outputStream -> {
+                try {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    inputStream.close();
+                    outputStream.close();
+                }
+            };
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new DoesNotExist("Error reading ts file");
+        }
     }
 
     @Override
