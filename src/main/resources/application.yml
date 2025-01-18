@@ -1,7 +1,18 @@
 server:
   port: ${SPRINGBOOT_PORT}
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE
+
+
+
 spring:
+  jpa:
+    show-sql: true
   security:
     oauth2:
       client:
@@ -32,6 +43,10 @@ kakao:
   client-id: ${KAKAO_CLIENT_ID}
   client-secret: ${KAKAO_CLIENT_SECRET}
   redirect_uri: ${KAKAO_REDIRECT_URI}
+
+file:
+  video-path: classpath:/static/videos/
+  server-path: https://server.chani.pro/videos/
 
 ---
 spring:
