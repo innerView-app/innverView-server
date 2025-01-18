@@ -105,6 +105,8 @@ public class VideoServiceImpl implements VideoService{
 
     @Override
     public List<VideoProfile> list() {
-        return List.of();
+        return videoRepository.findAll().stream()
+                .map(VideoProfile::new)
+                .toList();
     }
 }

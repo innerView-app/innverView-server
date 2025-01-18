@@ -28,6 +28,8 @@ public class VideoController {
         this.videoService = videoService;
     }
 
+
+
     @GetMapping(
             path = "/{id}/index.m3u8",
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
@@ -56,5 +58,12 @@ public class VideoController {
         } catch (DoesNotExist e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping(
+            path = "/list"
+    )
+    public ResponseEntity list() {
+        return ResponseEntity.ok(videoService.list());
     }
 }
