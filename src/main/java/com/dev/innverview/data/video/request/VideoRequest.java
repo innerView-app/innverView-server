@@ -1,4 +1,4 @@
-package com.dev.innverview.data.video;
+package com.dev.innverview.data.video.request;
 
 import com.dev.innverview.validation.UUID;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

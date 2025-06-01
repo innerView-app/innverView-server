@@ -1,7 +1,8 @@
 package com.dev.innverview.controller.video;
 
-import com.dev.innverview.data.video.TsRequest;
-import com.dev.innverview.data.video.VideoRequest;
+import com.dev.innverview.data.video.request.TsRequest;
+import com.dev.innverview.data.video.request.UploadRequest;
+import com.dev.innverview.data.video.request.VideoRequest;
 import com.dev.innverview.exception.DoesNotExist;
 import com.dev.innverview.service.video.VideoService;
 import jakarta.validation.Valid;
@@ -13,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.util.UUID;
@@ -28,7 +31,14 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-
+    @PostMapping(
+            path = "/",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity upload(@Valid UploadRequest request) throws Exception {
+        MultipartFile file = request.getFile();
+        videoService.upload(file, request.getFileName());
+        return ResponseEntity.ok("Upload success");
+    }
 
     @GetMapping(
             path = "/{id}/index.m3u8",

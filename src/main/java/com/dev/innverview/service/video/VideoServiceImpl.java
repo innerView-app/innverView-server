@@ -8,7 +8,9 @@ import com.dev.innverview.exception.DoesNotExist;
 import com.dev.innverview.service.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.BufferedReader;
@@ -34,6 +36,14 @@ public class VideoServiceImpl implements VideoService{
 
     @Override
     public VideoProfile createFromObjectStorage(UUID userId, String title, String objectName) {
+        return null;
+    }
+
+    @Async
+    @Override
+    public VideoProfile upload(MultipartFile file, String fileName) throws Exception {
+
+
         return null;
     }
 

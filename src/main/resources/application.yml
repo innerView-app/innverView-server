@@ -46,7 +46,7 @@ kakao:
 
 file:
   video-path: classpath:/static/videos/
-  server-path: https://server.chani.pro/videos/
+  server-path: https://server.chani.pro/api/video/
 
 ---
 spring:
