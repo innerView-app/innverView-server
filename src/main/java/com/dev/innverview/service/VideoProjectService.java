@@ -26,8 +26,9 @@ public class VideoProjectService {
 
     public VideoProject saveProject(User user, String projectName, String editData, MultipartFile video) throws IOException {
         String fileName = UUID.randomUUID() + "_" + video.getOriginalFilename();
-        Path target = Paths.get(uploadDir).resolve(fileName);
-        Files.createDirectories(target.getParent());
+        Path targetDir = Paths.get(uploadDir, "projects");
+        Files.createDirectories(targetDir);
+        Path target = targetDir.resolve(fileName);
         Files.write(target, video.getBytes());
 
         VideoProject project = VideoProject.builder()
@@ -40,7 +41,10 @@ public class VideoProjectService {
     }
 
     public List<VideoProject> list(User user) {
-        return repository.findAll();
+        if (user == null) {
+            return repository.findAll();
+        }
+        return repository.findByUser(user);
     }
 
     public VideoProject findById(UUID id) {
