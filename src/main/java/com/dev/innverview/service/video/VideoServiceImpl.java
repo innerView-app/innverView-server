@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
+import com.dev.innverview.util.VideoUtil;
 
 @Service
 public class VideoServiceImpl implements VideoService{
@@ -65,19 +66,9 @@ public class VideoServiceImpl implements VideoService{
                             .filter(file -> file.endsWith("index.m3u8"))
                             .findFirst()
                             .orElseThrow(() -> new DoesNotExist("index.m3u8 not found"));
-            BufferedReader reader =
-                    new BufferedReader(
-                            new InputStreamReader(
-                                    localStorageService.readFile(video.getId().toString(), target)));
-            return outputStream -> {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.endsWith(".ts")) line = m3u8Prefix + line;
-                    outputStream.write(line.getBytes());
-                    outputStream.write(System.lineSeparator().getBytes());
-                }
-                outputStream.flush();
-            };
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    localStorageService.readFile(video.getId().toString(), target)));
+            return VideoUtil.streamIndex(reader, m3u8Prefix);
         } catch (IOException e) {
             throw new DoesNotExist("Error reading m3u8 file");
         }
@@ -89,26 +80,10 @@ public class VideoServiceImpl implements VideoService{
         if (video.getStatus().equals(VideoStatus.PROCESSING)) {
             throw new DoesNotExist("Video is still processing");
         }
-        System.out.println("ts: " + ts);
         try {
             InputStream inputStream = localStorageService.readFile(video.getId().toString(), ts);
-            return outputStream -> {
-                try {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-                    outputStream.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    inputStream.close();
-                    outputStream.close();
-                }
-            };
+            return VideoUtil.streamFile(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new DoesNotExist("Error reading ts file");
         }
     }

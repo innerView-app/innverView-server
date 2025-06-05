@@ -66,4 +66,33 @@ public class VideoUtil {
         command.add("index.m3u8");
         return command;
     }
+
+    public static org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody streamIndex(java.io.BufferedReader reader, String prefix) {
+        return outputStream -> {
+            try (reader) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.endsWith(".ts")) {
+                        line = prefix + line;
+                    }
+                    outputStream.write(line.getBytes());
+                    outputStream.write(System.lineSeparator().getBytes());
+                }
+                outputStream.flush();
+            }
+        };
+    }
+
+    public static org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody streamFile(java.io.InputStream inputStream) {
+        return outputStream -> {
+            try (inputStream) {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                outputStream.flush();
+            }
+        };
+    }
 }

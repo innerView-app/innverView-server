@@ -9,9 +9,15 @@ class JwtTokenProviderTest {
 
     private final JwtTokenProvider provider = new JwtTokenProvider();
 
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        org.springframework.test.util.ReflectionTestUtils.setField(provider, "secret", "0123456789abcdef0123456789abcdef");
+        org.springframework.test.util.ReflectionTestUtils.setField(provider, "expiration", 3600000L);
+        provider.init();
+    }
+
     @Test
     void generateAndValidateToken() {
-        provider.init();
         User user = User.builder()
                 .id(1L)
                 .email("test@example.com")
