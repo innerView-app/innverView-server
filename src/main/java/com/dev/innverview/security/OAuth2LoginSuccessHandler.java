@@ -1,10 +1,13 @@
 package com.dev.innverview.security;
 
+import com.dev.innverview.domain.User;
 import com.dev.innverview.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -19,6 +22,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final JwtTokenProvider tokenProvider;
     private final UserService userService;
+    private static final Logger log = LoggerFactory.getLogger(OAuth2LoginSuccessHandler.class);
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -26,7 +30,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = extractEmail(oAuth2User);
         if (email != null) {
-            String token = tokenProvider.generateToken(email);
+            User user = userService.getByEmail(email);
+            String token = tokenProvider.generateToken(user);
+            log.debug("Generated token for userId: {}", user.getId());
             response.addHeader("Authorization", "Bearer " + token);
         }
         super.onAuthenticationSuccess(request, response, authentication);
