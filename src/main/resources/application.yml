@@ -1,5 +1,5 @@
 server:
-  port: ${SPRINGBOOT_PORT}
+  port: ${SPRINGBOOT_PORT:8080}
 
 logging:
   level:
@@ -22,6 +22,11 @@ spring:
                 token-uri: https://kauth.kakao.com/oauth/token
                 user-info-uri: https://kapi.kakao.com/v2/user/me
                 user-name-attribute: id
+            google:
+                authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+                token-uri: https://oauth2.googleapis.com/token
+                user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+                user-name-attribute: sub
         registration:
             kakao:
                 client-id: ${KAKAO_CLIENT_ID}
@@ -33,16 +38,36 @@ spring:
                 scope:
                     - profile
                     - account_email
+            google:
+                client-id: ${GOOGLE_CLIENT_ID}
+                client-secret: ${GOOGLE_CLIENT_SECRET}
+                redirect-uri: ${GOOGLE_REDIRECT_URI}
+                authorization-grant-type: authorization_code
+                client-name: google
+                scope:
+                    - profile
+                    - email
   datasource:
-    url: jdbc:mysql://${host}:${DB_PORT}/${database}
-    username: ${username}
-    password: ${password}
+    url: jdbc:mysql://${host:localhost}:${DB_PORT:3306}/${database:innerview}
+    username: ${username:root}
+    password: ${password:pass}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
 
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
   client-secret: ${KAKAO_CLIENT_SECRET}
-  redirect_uri: ${KAKAO_REDIRECT_URI}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+
+uploads:
+  path: ${UPLOAD_PATH:uploads}
+
+jwt:
+  secret: ${JWT_SECRET:0123456789abcdef0123456789abcdef}
+  expiration: ${JWT_EXPIRATION:3600000}
 
 file:
   video-path: classpath:/static/videos/
@@ -54,5 +79,5 @@ spring:
     activate:
       on-profile: build
 server:
-  port: ${SPRINGBOOT_PORT_SERVICE}
+  port: ${SPRINGBOOT_PORT_SERVICE:8080}
 

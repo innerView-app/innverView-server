@@ -35,21 +35,42 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // OAuth 제공자 정보
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        String providerId = oAuth2User.getAttribute("id");
-        String email = oAuth2User.getAttribute("email");
-        String nickname = oAuth2User.getAttribute("nickname");
-        String profileImage = oAuth2User.getAttribute("profile_image");
+        String providerId = String.valueOf(oAuth2User.getAttribute("id"));
+
+        String email = null;
+        String nickname = null;
+        String profileImage = null;
+
+        if ("kakao".equals(provider)) {
+            java.util.Map<String, Object> account = oAuth2User.getAttribute("kakao_account");
+            if (account != null) {
+                email = (String) account.get("email");
+            }
+            java.util.Map<String, Object> props = oAuth2User.getAttribute("properties");
+            if (props != null) {
+                nickname = (String) props.get("nickname");
+                profileImage = (String) props.get("profile_image");
+            }
+        } else {
+            email = oAuth2User.getAttribute("email");
+            nickname = oAuth2User.getAttribute("nickname");
+            profileImage = oAuth2User.getAttribute("profile_image");
+        }
 
         // 사용자 저장 또는 업데이트
-        User user = userRepository.findByEmail(email)
+        final String finalEmail = email;
+        final String finalNickname = nickname;
+        final String finalProfileImage = profileImage;
+
+        User user = userRepository.findByEmail(finalEmail)
                 .orElseGet(() -> userRepository.save(User.builder()
-                        .email(email)
-                        .username(nickname)
-                        .profileImage(profileImage)
+                        .email(finalEmail)
+                        .username(finalNickname)
+                        .profileImage(finalProfileImage)
                         .build()));
 
         // 리프레시 토큰 가져오기
-        String principalName = email; // 사용자를 식별할 고유 값 (예: 이메일)
+        String principalName = email != null ? email : providerId;
         OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
                 provider, principalName
         );
@@ -81,7 +102,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 oAuth2User.getAttributes(),
-                "email"
+                "id"
         );
     }
 }

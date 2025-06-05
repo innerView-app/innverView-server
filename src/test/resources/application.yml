@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: http://localhost/auth
+            token-uri: http://localhost/token
+            user-info-uri: http://localhost/user
+            user-name-attribute: id
+        registration:
+          kakao:
+            client-id: test
+            client-secret: test
+            redirect-uri: http://localhost
+            authorization-grant-type: authorization_code
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+kakao:
+  client-id: test
+  client-secret: test
+  redirect-uri: http://localhost
+server:
+  port: 0
+host: localhost
+DB_PORT: 3306
+database: test
+username: root
+password: pass
+KAKAO_CLIENT_ID: test
+KAKAO_CLIENT_SECRET: test
+KAKAO_REDIRECT_URI: http://localhost
+GOOGLE_CLIENT_ID: test
+GOOGLE_CLIENT_SECRET: test
+GOOGLE_REDIRECT_URI: http://localhost
+uploads:
+  path: uploads-test
