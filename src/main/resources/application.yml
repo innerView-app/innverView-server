@@ -1,7 +1,18 @@
 server:
   port: ${SPRINGBOOT_PORT:8080}
 
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: TRACE
+
+
+
 spring:
+  jpa:
+    show-sql: true
   security:
     oauth2:
       client:
@@ -57,6 +68,10 @@ uploads:
 jwt:
   secret: ${JWT_SECRET:0123456789abcdef0123456789abcdef}
   expiration: ${JWT_EXPIRATION:3600000}
+
+file:
+  video-path: classpath:/static/videos/
+  server-path: https://server.chani.pro/api/video/
 
 ---
 spring:
