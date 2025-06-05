@@ -24,7 +24,11 @@
 - `POST /api/innerviews` – InnerView 생성
 - `GET /api/innerviews` – InnerView 목록 조회
 - `GET /api/innerviews/{id}` – 특정 InnerView 조회
-- OAuth2 로그인 시작 경로: `/oauth2/authorize/{provider}`
+- `POST /auth/register` – 로컬 사용자 등록
+- `POST /api/projects` – 비디오 프로젝트 업로드
+- OAuth2 로그인 시작 경로: `/oauth2/authorize/{provider}` (kakao, google 지원)
+
+더 많은 API 정보는 docs/API.md 파일을 참고하세요.
 
 ## 테스트
 단위 테스트 실행:
