@@ -20,10 +20,10 @@ import java.io.UnsupportedEncodingException;
 @Service
 public class KakaoService {
 
-    @Value("${kakao.client_id}")
+    @Value("${kakao.client-id}")
     private String clientId;
 
-    @Value("${kakao.redirect_uri}")
+    @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
     @Value("${kakao.client-secret}")
@@ -31,12 +31,13 @@ public class KakaoService {
 
     private static final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
+    private final RestTemplate restTemplate;
+
     public String getAccessTokenFromKakao(String code) throws UnsupportedEncodingException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        RestTemplate restTemplate = new RestTemplate();
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);

@@ -7,15 +7,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@org.springframework.context.annotation.Profile("!test")
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final ClientRegistrationRepository clientRegistrationRepository;
     /**
      * 정적 리소스 필터 제외 설정
      */
@@ -30,6 +35,15 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // OAuth2 요청 리다이렉트를 담당하는 필터 설정
+        var resolver = new DefaultOAuth2AuthorizationRequestResolver(
+                clientRegistrationRepository,
+                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
+        );
+        var redirectFilter = new OAuth2AuthorizationRequestRedirectFilter(resolver);
+
+        http.addFilterBefore(redirectFilter, OAuth2AuthorizationRequestRedirectFilter.class);
+
         http
                 // CORS 및 CSRF 설정
                 .cors(cors -> cors.disable()) // CORS 비활성화 (필요 시 별도 설정)
@@ -49,12 +63,12 @@ public class SecurityConfig {
 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/auth/kakao") // 커스텀 로그인 페이지 (옵션)
+                        .authorizationEndpoint(endpoint ->
+                                endpoint.authorizationRequestResolver(resolver))
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService) // 사용자 정보 처리 서비스
-                        )
-                        .defaultSuccessUrl("/") // 로그인 성공 후 이동 경로
-                        .failureUrl("/login?error") // 로그인 실패 후 이동 경로
+                                .userService(customOAuth2UserService))
+                        .defaultSuccessUrl("/")
+                        .failureUrl("/login?error")
                 )
 
                 // 로그아웃 설정
