@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.UUID;
 import com.dev.innverview.util.VideoUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 @Service
 public class VideoServiceImpl implements VideoService{
@@ -30,22 +32,51 @@ public class VideoServiceImpl implements VideoService{
     @Autowired
     StorageService localStorageService;
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
 
 
     @Value("${file.server-path}")
     private String videoPrefix;
 
+    @Value("${file.video-path}")
+    private String videoPath;
+
     @Override
     public VideoProfile createFromObjectStorage(UUID userId, String title, String objectName) {
-        return null;
+        Video video = new Video(userId != null ? userId.toString() : null, title);
+        video.setPath(objectName);
+        video.setStatus(VideoStatus.READY);
+        video = videoRepository.save(video);
+        return new VideoProfile(video);
     }
 
     @Async
     @Override
     public VideoProfile upload(MultipartFile file, String fileName) throws Exception {
+        Video video = new Video("system", fileName);
+        video = videoRepository.save(video);
 
+        Resource base = resourceLoader.getResource(videoPath);
+        java.nio.file.Path dir = base.getFile().toPath().resolve(video.getId().toString());
+        java.nio.file.Files.createDirectories(dir);
 
-        return null;
+        java.nio.file.Path source = dir.resolve(file.getOriginalFilename());
+        java.nio.file.Files.write(source, file.getBytes());
+
+        try {
+            VideoUtil.transcodeToM3u8(source.toFile(), dir.toFile());
+            video.setStatus(VideoStatus.READY);
+            video.setPath(videoPrefix + video.getId() + "/index.m3u8");
+        } catch (Exception e) {
+            video.setStatus(VideoStatus.ERROR);
+            video.setPath("");
+            throw e;
+        } finally {
+            videoRepository.save(video);
+        }
+        return new VideoProfile(video);
     }
 
 
