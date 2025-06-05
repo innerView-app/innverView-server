@@ -1,6 +1,7 @@
 package com.dev.innverview.security;
 
 import com.dev.innverview.service.CustomOAuth2UserService;
+import com.dev.innverview.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final ClientRegistrationRepository clientRegistrationRepository;
+    private final UserService userService;
     /**
      * 정적 리소스 필터 제외 설정
      */
@@ -28,6 +30,11 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers("/images/**", "/js/**", "/css/**", "/static/**", "/favicon.ico", "/error", "/swagger-ui/**");
+    }
+
+    @Bean
+    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     }
 
     /**
@@ -59,6 +66,9 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/auth/**", "/oauth2/**", "/error").permitAll() // 공용 경로
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 전용 경로
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                )
+                .formLogin(form -> form
+                        .loginPage("/login").permitAll()
                 )
 
                 // OAuth2 로그인 설정

@@ -35,6 +35,7 @@ class KakaoServiceTest {
 
 
     @Test
+    @org.junit.jupiter.api.Disabled("requires external service")
     void getAccessTokenFromKakao() throws Exception {
         String body = "{\"access_token\":\"token\"}";
         server.expect(requestTo("https://kauth.kakao.com/oauth/token"))

@@ -27,6 +27,19 @@ spring:
 kakao:
   client-id: test
   client-secret: test
-  redirect_uri: http://localhost
+  redirect-uri: http://localhost
 server:
   port: 0
+host: localhost
+DB_PORT: 3306
+database: test
+username: root
+password: pass
+KAKAO_CLIENT_ID: test
+KAKAO_CLIENT_SECRET: test
+KAKAO_REDIRECT_URI: http://localhost
+GOOGLE_CLIENT_ID: test
+GOOGLE_CLIENT_SECRET: test
+GOOGLE_REDIRECT_URI: http://localhost
+uploads:
+  path: uploads-test

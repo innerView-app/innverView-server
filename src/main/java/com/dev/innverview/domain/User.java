@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = true)
     private String profileImage; // 프로필 이미지 URL
 
+    @Column(nullable = true)
+    private String password; // 로컬 로그인용 비밀번호 해시
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt; // 계정 생성 시간
 
