@@ -1,7 +1,6 @@
 package com.dev.innverview.security;
 
 import com.dev.innverview.service.CustomOAuth2UserService;
-import com.dev.innverview.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,6 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final UserService userService;
     /**
      * 정적 리소스 필터 제외 설정
      */
