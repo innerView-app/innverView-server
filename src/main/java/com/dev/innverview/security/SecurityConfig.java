@@ -7,10 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -20,7 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     /**
      * 정적 리소스 필터 제외 설정
      */
@@ -40,26 +39,9 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // OAuth2 요청 리다이렉트를 담당하는 필터 설정
-        var resolver = new DefaultOAuth2AuthorizationRequestResolver(
-                clientRegistrationRepository,
-                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
-        );
-        var redirectFilter = new OAuth2AuthorizationRequestRedirectFilter(resolver);
-
-        http.addFilterBefore(redirectFilter, OAuth2AuthorizationRequestRedirectFilter.class);
-
         http
-                // CORS 및 CSRF 설정
-                .cors(cors -> cors.disable()) // CORS 비활성화 (필요 시 별도 설정)
-                .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (REST API에 적합)
-
-                // 세션 관리
-                .sessionManagement(session -> session
-                        .sessionFixation().migrateSession() // 세션 고정 보호
-                )
-
-                // 권한 설정
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error").permitAll()
                         .requestMatchers("/api/shorts", "/api/projects/*/final/**").permitAll()
@@ -69,24 +51,18 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
                 )
-
-                // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(endpoint ->
-                                endpoint.authorizationRequestResolver(resolver))
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService))
-                        .defaultSuccessUrl("/")
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
                         .failureUrl("/login?error")
                 )
-
-                // 로그아웃 설정
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout")) // 로그아웃 경로
-                        .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트 경로
-                        .invalidateHttpSession(true) // 세션 무효화
-                        .deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
-                );
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

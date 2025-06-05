@@ -36,7 +36,7 @@ docker exec -i innerview-mysql mysql -uroot -ppass innerview < docs/mysql-schema
 - `GET /api/innerviews/{id}` – 특정 InnerView 조회
 - `POST /auth/register` – 로컬 사용자 등록
 - `POST /api/projects` – 비디오 프로젝트 업로드
-- OAuth2 로그인 시작 경로: `/oauth2/authorize/{provider}` (kakao, google 지원)
+- OAuth2 로그인 시작 경로: `/oauth2/authorization/{provider}` (kakao, google 지원). 로그인 성공 시 응답 헤더 `Authorization: Bearer <token>` 으로 JWT 토큰이 발급됩니다.
 
 더 많은 API 정보는 docs/API.md 파일을 참고하세요.
 

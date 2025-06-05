@@ -5,6 +5,11 @@
 <title>InnverView</title>
 </head>
 <body>
+<style>
+    body{font-family:Arial, sans-serif;background:#f5f5f5;margin:0;padding:40px;text-align:center;}
+    #videoContainer{margin-top:20px;}
+    video{max-width:100%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+</style>
 <div id="user">
     <span th:if="${username != null}" th:text="${username}"></span>
     <a th:if="${username == null}" href="/login">로그인</a>
