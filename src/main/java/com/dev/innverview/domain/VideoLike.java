@@ -2,6 +2,7 @@ package com.dev.innverview.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,10 +18,12 @@ public class VideoLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Type(type = "uuid-char")
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id")
+    @JoinColumn(name = "content_id", columnDefinition = "VARCHAR(36)")
     private VideoContent content;
 
     @ManyToOne(fetch = FetchType.LAZY)
