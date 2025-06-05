@@ -1,5 +1,5 @@
 server:
-  port: ${SPRINGBOOT_PORT}
+  port: ${SPRINGBOOT_PORT:8080}
 
 spring:
   security:
@@ -56,5 +56,5 @@ spring:
     activate:
       on-profile: build
 server:
-  port: ${SPRINGBOOT_PORT_SERVICE}
+  port: ${SPRINGBOOT_PORT_SERVICE:8080}
 
