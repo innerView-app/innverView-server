@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error").permitAll()
                         .requestMatchers("/api/shorts", "/api/projects/*/final/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
