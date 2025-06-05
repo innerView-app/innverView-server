@@ -2,6 +2,7 @@ package com.dev.innverview.controller;
 
 import com.dev.innverview.domain.VideoProject;
 import com.dev.innverview.service.VideoProjectService;
+import com.dev.innverview.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,19 +20,22 @@ import java.util.UUID;
 public class VideoProjectController {
 
     private final VideoProjectService service;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<VideoProject> upload(@AuthenticationPrincipal UserDetails user,
                                                @RequestParam String projectName,
                                                @RequestParam String editData,
                                                @RequestPart MultipartFile video) throws IOException {
-        VideoProject saved = service.saveProject(null, projectName, editData, video);
+        VideoProject saved = service.saveProject(
+                user != null ? userService.getByEmail(user.getUsername()) : null,
+                projectName, editData, video);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping
     public List<VideoProject> list(@AuthenticationPrincipal UserDetails user) {
-        return service.list(null);
+        return service.list(user != null ? userService.getByEmail(user.getUsername()) : null);
     }
 
     @GetMapping("/{id}")

@@ -14,6 +14,16 @@
    ./gradlew bootRun
    ```
 
+## 데이터베이스 설정
+MySQL 8.0 컨테이너를 사용한다면 다음과 같이 실행할 수 있습니다.
+```bash
+docker run --name innerview-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=innerview -d mysql:8.0
+```
+이후 `docs/mysql-schema.sql` 스크립트를 적용하여 테이블을 생성합니다.
+```bash
+docker exec -i innerview-mysql mysql -uroot -ppass innerview < docs/mysql-schema.sql
+```
+
 ## 주요 환경 변수
 모든 변수는 `.env.example` 파일을 참고하세요. 주요 변수는 다음과 같습니다.
 - `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`, `KAKAO_REDIRECT_URI`

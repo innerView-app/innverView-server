@@ -1,7 +1,6 @@
 package com.dev.innverview.security;
 
 import com.dev.innverview.service.CustomOAuth2UserService;
-import com.dev.innverview.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +21,6 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final UserService userService;
     /**
      * 정적 리소스 필터 제외 설정
      */
@@ -63,9 +61,10 @@ public class SecurityConfig {
 
                 // 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/auth/**", "/oauth2/**", "/error").permitAll() // 공용 경로
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 전용 경로
-                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                        .requestMatchers("/", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error").permitAll()
+                        .requestMatchers("/api/shorts", "/api/projects/*/final/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login").permitAll()
