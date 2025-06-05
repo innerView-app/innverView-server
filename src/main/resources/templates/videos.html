@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Videos</title>
+</head>
+<body>
+<h1>Short Videos</h1>
+<div id="feed"></div>
+<script>
+fetch('/api/shorts')
+  .then(res => res.json())
+  .then(list => {
+    const feed = document.getElementById('feed');
+    list.forEach(c => {
+      const video = document.createElement('video');
+      video.src = `/api/projects/${c.project.id}/final/hls/${c.id}/index.m3u8`;
+      video.controls = true;
+      feed.appendChild(video);
+    });
+  });
+</script>
+</body>
+</html>
