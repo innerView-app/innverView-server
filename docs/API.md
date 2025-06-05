@@ -13,3 +13,4 @@
 - `POST /api/projects` (multipart/form-data)
 - `GET /api/projects`
 - `GET /api/projects/{id}`
+- 인증된 사용자만 접근 가능합니다. 프로젝트 업로드 시 `projectName`, `editData`, `video` 필드를 전송합니다.

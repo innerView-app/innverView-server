@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,14 +29,20 @@ class VideoProjectControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    com.dev.innverview.service.UserService userService;
+
     @Test
     @org.junit.jupiter.api.Disabled("flaky in CI")
     void uploadProject() throws Exception {
         MockMultipartFile file = new MockMultipartFile("video", "test.mp4", "video/mp4", new byte[]{1,2,3});
+        userService.register("test@example.com", "pass");
+
         mockMvc.perform(multipart("/api/projects")
                         .file(file)
                         .param("projectName", "proj")
-                        .param("editData", "{}"))
+                        .param("editData", "{}")
+                        .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user("test@example.com")))
                 .andExpect(status().isOk());
     }
 }

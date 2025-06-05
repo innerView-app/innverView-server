@@ -25,6 +25,10 @@ public class VideoProjectService {
     private String uploadDir;
 
     public VideoProject saveProject(User user, String projectName, String editData, MultipartFile video) throws IOException {
+        if (user == null) {
+            throw new IllegalArgumentException("user must not be null");
+        }
+
         String fileName = UUID.randomUUID() + "_" + video.getOriginalFilename();
         Path target = Paths.get(uploadDir).resolve(fileName);
         Files.createDirectories(target.getParent());
@@ -40,10 +44,14 @@ public class VideoProjectService {
     }
 
     public List<VideoProject> list(User user) {
-        return repository.findAll();
+        if (user == null) {
+            throw new IllegalArgumentException("user must not be null");
+        }
+        return repository.findByUser(user);
     }
 
     public VideoProject findById(UUID id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("project not found"));
     }
 }
