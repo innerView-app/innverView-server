@@ -3,7 +3,7 @@
 이 프로젝트는 [innerView 안드로이드 앱](https://github.com/innerView-app/innerView-android)에서 사용하는 Spring Boot 백엔드입니다. 카카오를 포함한 OAuth2 로그인과 **InnerView** 데이터를 관리하기 위한 REST API를 제공합니다.
 
 ## 요구 사항
-- Java 17
+- Java 21
 - Gradle
 - 프로덕션에서는 MySQL 사용, 테스트 시에는 H2 사용
 
