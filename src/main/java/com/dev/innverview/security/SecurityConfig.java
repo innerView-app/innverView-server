@@ -29,11 +29,6 @@ public class SecurityConfig {
                 .requestMatchers("/images/**", "/js/**", "/css/**", "/static/**", "/favicon.ico", "/error", "/swagger-ui/**");
     }
 
-    @Bean
-    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
-        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-    }
-
     /**
      * Spring Security Filter Chain 설정
      */
