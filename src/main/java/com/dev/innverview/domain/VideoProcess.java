@@ -26,12 +26,12 @@ public class VideoProcess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "VARCHAR(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id", columnDefinition = "VARCHAR(36)")
+    @JoinColumn(name = "content_id", columnDefinition = "CHAR(36)")
     private VideoContent content;
 
     @Enumerated(EnumType.STRING)

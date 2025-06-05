@@ -18,12 +18,12 @@ public class VideoContent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "VARCHAR(36)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", columnDefinition = "VARCHAR(36)")
+    @JoinColumn(name = "project_id", columnDefinition = "CHAR(36)")
     private VideoProject project;
 
     @Column(nullable = false)
