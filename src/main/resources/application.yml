@@ -45,6 +45,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate.type.preferred_uuid_jdbc_type: CHAR
 
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
