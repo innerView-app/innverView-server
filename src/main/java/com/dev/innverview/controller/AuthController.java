@@ -2,9 +2,7 @@ package com.dev.innverview.controller;
 
 import com.dev.innverview.service.KakaoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,18 +15,6 @@ public class AuthController {
 
     private final KakaoService kakaoService;
 
-    @Value("${kakao.client-id}")
-    String kakaoRestApiKey;
-
-    @Value("${kakao.redirect-uri}")
-    private String kakaoRedirectUri;
-
-    @GetMapping("/auth/kakao")
-    public String loginPage(Model model) {
-        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+kakaoRestApiKey+"&redirect_uri="+kakaoRedirectUri;
-        model.addAttribute("location", location);
-        return "login";
-    }
 
     @GetMapping("/auth/kakao/callback")
     public String kakaoCallback(@RequestParam("code") String code) throws UnsupportedEncodingException {

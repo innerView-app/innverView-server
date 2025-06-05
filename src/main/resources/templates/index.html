@@ -2,9 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+<title>InnverView</title>
 </head>
 <body>
-
+<div id="user">
+    <span th:if="${username != null}" th:text="${username}"></span>
+    <a th:if="${username == null}" href="/login">로그인</a>
+</div>
+<div id="videoContainer">
+    <p id="noVideo" style="display:none">없음</p>
+    <video id="introVideo" style="display:none" controls autoplay loop></video>
+</div>
+<script>
+fetch('/api/shorts?size=1')
+  .then(res => res.json())
+  .then(list => {
+    if(list.length > 0) {
+      const v = document.getElementById('introVideo');
+      v.src = `/api/projects/${list[0].project.id}/final/hls/${list[0].id}/index.m3u8`;
+      v.style.display = 'block';
+    } else {
+      document.getElementById('noVideo').style.display = 'block';
+    }
+  })
+  .catch(() => document.getElementById('noVideo').style.display = 'block');
+</script>
 </body>
 </html>
