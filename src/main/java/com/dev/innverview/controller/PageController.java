@@ -10,17 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String index(Model model, @AuthenticationPrincipal UserDetails user) {
         if (user != null) {
             model.addAttribute("username", user.getUsername());
         }
         return "index";
-    }
-
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/home";
     }
 
     @GetMapping("/signup")

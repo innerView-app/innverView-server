@@ -38,15 +38,16 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error").permitAll()
+                        .requestMatchers("/", "/home", "/login", "/signup", "/videos", "/auth/**", "/oauth2/**", "/error", "/images/**").permitAll()
                         .requestMatchers("/api/shorts", "/api/projects/*/final/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login").permitAll()
+                        .loginPage("/login").permitAll().defaultSuccessUrl("/")
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureUrl("/login?error")
