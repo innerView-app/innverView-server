@@ -1,7 +1,7 @@
 package com.dev.innverview.security;
 
-import com.dev.innverview.domain.User;
-import com.dev.innverview.service.UserService;
+import com.dev.innverview.user.domain.User;
+import com.dev.innverview.user.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +35,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             log.debug("Generated token for userId: {}", user.getId());
             response.addHeader("Authorization", "Bearer " + token);
         }
+        setDefaultTargetUrl("/");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 

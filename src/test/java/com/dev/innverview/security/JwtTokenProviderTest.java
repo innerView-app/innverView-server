@@ -1,6 +1,6 @@
 package com.dev.innverview.security;
 
-import com.dev.innverview.domain.User;
+import com.dev.innverview.user.domain.User;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
