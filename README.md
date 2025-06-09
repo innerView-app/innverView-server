@@ -26,7 +26,7 @@ docker exec -i innerview-mysql mysql -uroot -ppass innerview < docs/mysql-schema
 
 ## 주요 환경 변수
 모든 변수는 `.env.example` 파일을 참고하세요. 자세한 설명은 `docs/ENVIRONMENT.md`를 참고하세요. 주요 변수는 다음과 같습니다.
-- `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`, `KAKAO_REDIRECT_URI`
+- `KAKAO_CLIENT_ID`, `KAKAO_CLIENT_SECRET`, `KAKAO_REDIRECT_URI` (기본값 `/login/oauth2/code/kakao`)
 - `SPRINGBOOT_PORT` – 서버 포트
 - 데이터베이스 접속 정보 (`host`, `DB_PORT` 등)
 - `JWT_SECRET` – JWT 서명을 위한 비밀 키

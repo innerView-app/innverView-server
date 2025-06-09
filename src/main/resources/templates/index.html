@@ -12,6 +12,7 @@
 </style>
 <div id="user">
     <span th:if="${username != null}" th:text="${username}"></span>
+    <a th:if="${username != null}" href="/auth/logout">로그아웃</a>
     <a th:if="${username == null}" href="/login">로그인</a>
 </div>
 <div id="videoContainer">

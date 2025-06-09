@@ -37,7 +37,7 @@ username: root
 password: pass
 KAKAO_CLIENT_ID: test
 KAKAO_CLIENT_SECRET: test
-KAKAO_REDIRECT_URI: http://localhost:8080/auth/kakao/callback
+KAKAO_REDIRECT_URI: http://localhost:8080/login/oauth2/code/kakao
 GOOGLE_CLIENT_ID: test
 GOOGLE_CLIENT_SECRET: test
 GOOGLE_REDIRECT_URI: http://localhost
