@@ -34,7 +34,8 @@ spring:
                 authorization-grant-type: authorization_code
                 client-name: kakao
                 scope:
-                    - profile
+                    - profile_nickname
+                    - profile_image
                     - account_email
             google:
                 client-id: ${GOOGLE_CLIENT_ID}
