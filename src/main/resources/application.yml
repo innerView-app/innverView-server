@@ -53,7 +53,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+
 
 kakao:
   client-id: ${KAKAO_CLIENT_ID}
