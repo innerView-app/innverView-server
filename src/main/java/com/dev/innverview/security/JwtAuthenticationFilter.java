@@ -1,6 +1,6 @@
 package com.dev.innverview.security;
 
-import com.dev.innverview.service.UserService;
+import com.dev.innverview.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

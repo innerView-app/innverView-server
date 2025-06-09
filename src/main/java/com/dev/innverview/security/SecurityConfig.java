@@ -1,6 +1,6 @@
 package com.dev.innverview.security;
 
-import com.dev.innverview.service.CustomOAuth2UserService;
+import com.dev.innverview.user.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
